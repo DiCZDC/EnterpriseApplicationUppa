@@ -1,0 +1,38 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
+*/
+/* 
+    Created on : 6 nov 2026, 11:00:29
+    Author     : daniel
+*/
+
+:root {
+    /* Marca */
+    --color-pink: #d45656;
+    --color-orange: #fba518;
+    --color-gold: #f9cb43;
+    --color-olive: #80b67e;
+    --color-blue: #368ab8;
+    --color-grape: #3c3546;
+
+    /* Neutros cálidos */
+    --color-cream: #f6efdb;
+    --color-bg: #fbf7ec;
+    --color-card: #ffffff;
+    --color-ink: #3c3546;
+    --color-ink-2: #5a5364;
+    --color-ink-3: #8a8395;
+    --color-line: rgba(60, 53, 70, 0.10);
+    --color-line-2: rgba(60, 53, 70, 0.06);
+
+    /* Acento */
+    --color-accent: var(--color-olive);
+    --color-accent-content: var(--color-grape);
+    --color-accent-foreground: #ffffff;
+
+    /* Verdes */
+    --color-verde-fuerte: #376939;
+    --color-verde-claro: #cdf9e3;
+    --color-verde-oscuro: #016630;
+}

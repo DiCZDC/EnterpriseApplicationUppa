@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <body>
+        <ui:composition template="/plantillas/layout.xhtml">
+
+            <ui:param name="bodyClass" value="uppa-body uppa-light"/>
+            <ui:define name="titulo">Inicio | Úppa</ui:define>
+
+            <ui:define name="content">
+                <h:outputStylesheet library="css" name="dashboard.css"/>
+
+                <div class="dash">
+
+                    <!-- Saludo -->
+                    <div class="dash-hello">¡Hola!, Usuario</div>
+                    <div class="dash-title-row">
+                        <i class="pi pi-search"></i>
+                        <h1 class="dash-title">¿Qué vamos<br/>a analizar hoy?</h1>
+                    </div>
+
+                    <!-- Tarjeta principal de escaneo -->
+                    <div class="hero-scan">
+                        <p:tag value="En menos de 10 segundos!" icon="pi pi-clock" styleClass="tag-lime"/>
+                        <div class="hero-scan-title">Identifica ahora</div>
+                        <div class="hero-scan-text">Sube o toma una foto y deja que la IA te ayude.</div>
+                        <p:button value="Empezar a escanear" icon="pi pi-search"
+                                  outcome="/vistas/reconocimiento/index" 
+                                  styleClass="btn-verde"/>
+                    </div>
+
+                    <!-- Cómo comenzar -->
+                    <section class="sec">
+                        <div class="sec-head">
+                            <h2>Cómo comenzar</h2>
+                            <small>En solo 3 pasos</small>
+                        </div>
+
+                        <div class="steps">
+                            <ui:repeat var="s" value="#{[
+                                {'n':'01','title':'Toma una foto','desc':'Centra el hongo bien iluminado dentro del marco.','color':'#80b67e','icon':'pi-camera'},
+                                {'n':'02','title':'Análisis con IA','desc':'Identifica especie, comestibilidad y enfermedades.','color':'#f9cb43','icon':'pi-star'},
+                                {'n':'03','title':'Tratamientos','desc':'Recibe descripción y opciones de tratamiento.','color':'#368ab8','icon':'pi-shield'}]}">
+                                <div class="step">
+                                    <div class="step-ico" style="background: #{s.color}1f; color: #{s.color};">
+                                        <i class="pi #{s.icon}"></i>
+                                    </div>
+                                    <div>
+                                        <div class="step-title">#{s.title}</div>
+                                        <div class="step-desc">#{s.desc}</div>
+                                    </div>
+                                </div>
+                            </ui:repeat>
+                        </div>
+                    </section>
+
+                    <!-- Identificaciones recientes -->
+                    <section class="sec">
+                        <div class="sec-head">
+                            <h2>Identificaciones recientes</h2>
+                            <p:link value="Ver todas" outcome="/vistas/reconocimiento/index" styleClass="link-olive"/>
+                        </div>
+
+                        <div class="recent">
+                            <ui:repeat var="m" value="#{[
+                                {'name':'Cantharellus cibarius','date':'13-04-2026','com':'Rebozuelo','status':'sano','image':'https://upload.wikimedia.org/wikipedia/commons/a/aa/2007-07-14_Cantharellus_cibarius.jpg'},
+                                {'name':'Boletus edulis','date':'22-04-2026','com':'Boleto','status':'sano','image':'https://upload.wikimedia.org/wikipedia/commons/b/b0/Boletus_edulis_EtgHollande_041031_091.jpg'},
+                                {'name':'Agaricus bisporus','date':'05-05-2026','com':'Champiñón blanco','status':'plaga','image':'https://extension.psu.edu/media/wysiwyg//extensions/catalog_product/9452fdf2a9104600895c1de77aa2f669/m/u/mushroom-infected-with-verticillium-dry-bubble-showing-split-stem-symptom.jpg'},
+                                {'name':'Morchella esculenta','date':'10-05-2026','com':'Colmenilla','status':'sano','image':'https://www.amanitacesarea.com/imagenes/morchella/esculenta1.jpg'}]}">
+
+                                <p:card styleClass="recent-card">
+                                    <f:facet name="header">
+                                        <div class="recent-img-wrap">
+                                            <img src="#{m.image}" alt="#{m.name}"/>
+                                            <span class="recent-status">
+                                                <p:tag value="Sano" styleClass="tag-sano"
+                                                       rendered="#{m.status eq 'sano'}"/>
+                                                <p:tag value="Plaga detectada" styleClass="tag-plaga"
+                                                       rendered="#{m.status ne 'sano'}"/>
+                                            </span>
+                                        </div>
+                                    </f:facet>
+
+                                    <div class="fields">
+                                        <div class="field">
+                                            <span class="field-label"><i class="pi pi-book"></i> Nombre común:</span>
+                                            <p:tag value="#{m.com}" styleClass="tag-amarillo"/>
+                                        </div>
+                                        <div class="field">
+                                            <span class="field-label"><i class="pi pi-bookmark"></i> Nombre científico:</span>
+                                            <p:tag value="#{m.name}" styleClass="tag-lima"/>
+                                        </div>
+
+                                        <h:panelGroup layout="block" styleClass="field" rendered="#{m.status ne 'sano'}">
+                                            <span class="field-label"><i class="pi pi-exclamation-triangle"></i> Nombre común de la enfermedad:</span>
+                                            <p:tag value="Burbuja Seca" styleClass="tag-rojo"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup layout="block" styleClass="field" rendered="#{m.status ne 'sano'}">
+                                            <span class="field-label"><i class="pi pi-shield"></i> Nombre científico de la enfermedad:</span>
+                                            <p:tag value="Verticillium" styleClass="tag-rojo"/>
+                                        </h:panelGroup>
+
+                                        <div class="field">
+                                            <span class="field-label"><i class="pi pi-calendar"></i> Fecha de análisis:</span>
+                                            <p:tag value="#{m.date}" styleClass="tag-gris"/>
+                                        </div>
+                                    </div>
+                                </p:card>
+                            </ui:repeat>
+                        </div>
+                    </section>
+
+                </div>
+            </ui:define>
+
+        </ui:composition>
+    </body>
+</html>

@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+    <body>
+        <ui:composition template="/plantillas/layout.xhtml">
+
+            <ui:define name="titulo">Úppa</ui:define>
+
+            <!-- navbar vacío: el inicio no lo muestra -->
+            <ui:define name="navbar"/>
+
+            <ui:define name="content">
+                <div class="welcome">
+                    <div class="welcome-bg"></div>
+
+                    <div class="spores">
+                        <c:forEach begin="0" end="39" var="i">
+                            <div class="spore"
+                                 style="left: #{(i * 73) mod 100}%; top: #{(i * 37) mod 100}%; width: #{2 + (i mod 3)}px; height: #{2 + (i mod 3)}px; background: #{i mod 5 eq 0 ? '#f9cb43' : 'rgba(246,239,219,0.25)'};"></div>
+                        </c:forEach>
+                    </div>
+
+                    <div class="hero">
+                        <div class="hero-logo">🍄</div>
+                        <h1 class="hero-title">Úppa</h1>
+                        <p class="hero-text">
+                            Identifica hongos comestibles y detecta enfermedades con inteligencia artificial.
+                        </p>
+                    </div>
+
+                    <div class="cta">
+                        <p:button value="Crear cuenta" 
+                                   
+                                  styleClass="btn-gold"/>
+                        
+                        <p:button value="Inicio" 
+                                  outcome="/vistas/dashboard"
+                                  styleClass="btn-outline"/>
+                        <p class="cta-note">
+                            Al continuar aceptas los Términos y la Política de privacidad
+                        </p>
+                    </div>
+                </div>
+            </ui:define>
+
+        </ui:composition>
+    </body>
+</html>
+
+

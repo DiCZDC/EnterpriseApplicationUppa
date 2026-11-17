@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/plantillas/layout.xhtml">
+
+    <ui:param name="bodyClass" value="uppa-body uppa-light"/>
+    <ui:define name="titulo">Estadísticas | Úppa</ui:define>
+
+    <ui:define name="content">
+        <h:outputStylesheet library="css" name="dashboard.css"/>
+
+        <div class="dash">
+
+            <!-- Header -->
+            <div class="dash-hello">Panel de control</div>
+            <div class="dash-title-row">
+                <i class="pi pi-chart-pie"></i>
+                <h1 class="dash-title">¡Consulta tus<br/>estadísticas!</h1>
+            </div>
+
+            <!-- GRÁFICA 1 — DonutChart: Estado general -->
+            <section class="sec">
+                <p:card styleClass="recent-card">
+                    <div class="sec-head mb-3">
+                        <div>
+                            <h2 class="inline-flex items-center gap-2">
+                                <i class="pi pi-chart-pie" style="font-size: 1.25rem;"></i> 
+                                Estado general de hongos
+                            </h2>
+                            <small>Distribución porcentual de hongos sanos vs. enfermedades detectadas</small>
+                        </div>
+                    </div>
+
+                    <div style="position: relative; margin: 0 auto; width: 100%; max-width: 340px;">
+                        <p:donutChart model="#{graficasBean.donutModel}" style="width: 100%; height: 300px;" />
+                    </div>
+                </p:card>
+            </section>
+
+            <!-- GRÁFICA 2 — BarChart: Especies identificadas -->
+            <section class="sec">
+                <p:card styleClass="recent-card">
+                    <div class="sec-head mb-3">
+                        <div>
+                            <h2 class="inline-flex items-center gap-2">
+                                <i class="pi pi-chart-bar" style="font-size: 1.25rem;"></i> 
+                                Especies identificadas
+                            </h2>
+                            <small>Total de escaneos por especie de hongo</small>
+                        </div>
+                    </div>
+
+                    <div style="position: relative; width: 100%; height: 280px;">
+                        <p:barChart model="#{graficasBean.barModel}" style="width: 100%; height: 260px;" />
+                    </div>
+                </p:card>
+            </section>
+
+            <!-- GRÁFICA 3 — LineChart: Tendencia de enfermedades -->
+            <section class="sec">
+                <p:card styleClass="recent-card">
+                    <div class="sec-head mb-3">
+                        <div>
+                            <h2 class="inline-flex items-center gap-2">
+                                <i class="pi pi-line-chart" style="font-size: 1.25rem;"></i> 
+                                Tendencia de enfermedades
+                            </h2>
+                            <small>Frecuencia mensual de enfermedades detectadas (enero – junio 2026)</small>
+                        </div>
+                    </div>
+
+                    <div style="position: relative; width: 100%; height: 280px;">
+                        <p:lineChart model="#{graficasBean.lineModel}" style="width: 100%; height: 260px;" />
+                    </div>
+                </p:card>
+            </section>
+
+        </div><!-- /.dash -->
+    </ui:define>
+
+</ui:composition>

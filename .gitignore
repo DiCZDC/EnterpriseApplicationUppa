@@ -1,0 +1,55 @@
+# ==========================================
+# NetBeans IDE & Payara Local Settings
+# ==========================================
+**/nbproject/private/
+**/nbproject/Makefile-*.mk
+**/nbproject/Package-*.bash
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# Optional: Uncomment if developers use different local Payara domains or run actions
+# nb-configuration.xml
+# nbactions.xml
+
+# ==========================================
+# Maven / Gradle Build Outputs (if applicable)
+# ==========================================
+target/
+.gradle/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# ==========================================
+# Java & Java EE / Jakarta EE Packages
+# ==========================================
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+hs_err_pid*
+replay_pid*
+
+# ==========================================
+# Payara / GlassFish Local Artifacts & Logs
+# ==========================================
+*.log
+glassfish/domains/
+payara/domains/
+**/generated/
+
+# ==========================================
+# OS & Temporary Files
+# ==========================================
+.DS_Store
+Thumbs.db
+*~
+*.swp
+*.bak
+*.tmp

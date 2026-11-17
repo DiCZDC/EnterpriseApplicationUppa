@@ -1,0 +1,122 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
+*/
+/* 
+    Created on : 6 nov 2026, 10:48:13
+    Author     : daniel
+*/
+
+:root {
+    --grape: #2a2434;
+    --cream: #f6efdb;
+    --gold:  #f9cb43;
+}
+
+html, body { margin: 0; min-height: 100%; }
+
+.uppa-body {
+    background: var(--grape);
+    color: var(--cream);
+    font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+}
+
+.uppa-main { min-height: 100vh; }
+
+/* Navbar */
+/* Navbar */
+.uppa-navbar.ui-menubar {
+    position: relative;
+    background: var(--color-bg);
+    border: 0;
+    border-bottom: 1px solid var(--color-line);
+    border-radius: 0;
+    padding: .5rem 1rem;
+}
+
+/* Items centrados */
+.uppa-navbar .ui-menubar-root-list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+    width: 100%;
+}
+
+/* Letras e iconos oscuros */
+.uppa-navbar .ui-menuitem-link,
+.uppa-navbar .ui-menuitem-text,
+.uppa-navbar .ui-menuitem-icon {
+    color: var(--color-ink) !important;
+    font-weight: 500;
+}
+
+.uppa-navbar .ui-menuitem-link:hover {
+    background: var(--color-line-2) !important;
+    border-radius: .75rem;
+}
+
+/* El avatar queda a la derecha sin romper el centrado */
+.uppa-navbar .ui-menubar-options {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Pantalla de inicio */
+.welcome {
+    position: relative;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    max-width: 28rem;
+    overflow: hidden;
+}
+.welcome-bg {
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(120% 70% at 50% 30%, #3c3546 0%, #2a2434 60%, #1d1828 100%);
+}
+.spores { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.spore  { position: absolute; border-radius: 9999px; opacity: .6; }
+
+.hero {
+    position: relative; z-index: 10; flex: 1;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 5rem 2rem 3rem;
+}
+.hero-logo {
+    width: 120px; height: 120px; border-radius: 28px;
+    background: var(--gold); color: var(--grape);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3.5rem; font-weight: 700;
+}
+.hero-title {
+    margin: 1.75rem 0 0; font-size: 44px; font-weight: 500;
+    line-height: 1; letter-spacing: -1px; color: var(--cream);
+}
+.hero-text {
+    margin: 1rem 0 0; max-width: 280px; font-size: 15px; line-height: 1.5;
+    color: rgba(246,239,219,.7);
+}
+
+.cta {
+    position: relative; z-index: 10;
+    display: flex; flex-direction: column; gap: .75rem; padding: 0 1.5rem 4rem;
+}
+.cta .ui-button, .cta a.ui-button {
+    height: 50px; border-radius: 1rem; font-size: 15px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center; width: 100%;
+    text-decoration: none;
+}
+.btn-gold.ui-button {
+    background: var(--gold) !important; color: var(--grape) !important;
+    border: 0 !important; box-shadow: 0 6px 14px rgba(249,203,67,.55);
+}
+.btn-outline.ui-button {
+    background: transparent !important; color: var(--cream) !important;
+    border: 1px solid rgba(246,239,219,.25) !important;
+}
+.btn-outline.ui-button:hover { background: rgba(246,239,219,.05) !important; }
+.cta-note { margin: .5rem 0 0; text-align: center; font-size: 12px; color: rgba(246,239,219,.5); }
