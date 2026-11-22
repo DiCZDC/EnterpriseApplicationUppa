@@ -12,6 +12,7 @@
 
     <ui:define name="content">
         <h:outputStylesheet library="css" name="dashboard.css"/>
+        <h:outputStylesheet library="css" name="reconocimiento.css"/>
 
         <div class="dash">
 
@@ -22,6 +23,15 @@
                 <h1 class="dash-title">¡Consulta tus<br/>estadísticas!</h1>
             </div>
 
+            <!-- Sin análisis todavía -->
+            <h:panelGroup layout="block" styleClass="vacio" rendered="#{graficasBean.sinDatos}">
+                <i class="pi pi-chart-bar"></i>
+                <p>Todavía no hay estadísticas: tus gráficas aparecerán cuando analices tu primer hongo.</p>
+                <p:button value="Identificar ahora" icon="pi pi-search"
+                          outcome="/vistas/reconocimiento/index" styleClass="btn-verde"/>
+            </h:panelGroup>
+
+            <h:panelGroup layout="block" rendered="#{not graficasBean.sinDatos}">
             <!-- GRÁFICA 1 — DonutChart: Estado general -->
             <section class="sec">
                 <p:card styleClass="recent-card">
@@ -66,10 +76,10 @@
                     <div class="sec-head mb-3">
                         <div>
                             <h2 class="inline-flex items-center gap-2">
-                                <i class="pi pi-line-chart" style="font-size: 1.25rem;"></i> 
+                                <i class="pi pi-chart-line" style="font-size: 1.25rem;"></i> 
                                 Tendencia de enfermedades
                             </h2>
-                            <small>Frecuencia mensual de enfermedades detectadas (enero – junio 2026)</small>
+                            <small>Frecuencia mensual de enfermedades detectadas (últimos 6 meses)</small>
                         </div>
                     </div>
 
@@ -78,6 +88,8 @@
                     </div>
                 </p:card>
             </section>
+
+            </h:panelGroup>
 
         </div><!-- /.dash -->
     </ui:define>

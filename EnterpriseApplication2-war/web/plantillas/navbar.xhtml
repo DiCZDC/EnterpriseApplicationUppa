@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8' ?> 
+<?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -10,10 +10,17 @@
         <p:menubar styleClass="uppa-navbar">
             <p:menuitem value="Inicio" outcome="/vistas/dashboard" icon="pi pi-home"/>
             <p:menuitem value="Identificar" outcome="/vistas/reconocimiento/index" icon="pi pi-search"/>
-            <p:menuitem value="Graficas" outcome="/vistas/graficas/index" icon="pi pi-clock"/>
+            <p:menuitem value="Historial" outcome="/vistas/reconocimiento/historial" icon="pi pi-history"/>
+            <p:menuitem value="Graficas" outcome="/vistas/graficas/index" icon="pi pi-chart-pie"/>
 
             <f:facet name="options">
-                <p:avatar icon="pi pi-user" shape="circle" size="normal"/>
+                <div class="nav-usuario">
+                    <p:avatar label="#{aSesion.iniciales}" shape="circle" size="normal"
+                              styleClass="nav-avatar" title="#{aSesion.nombre}"/>
+                    <p:commandButton icon="pi pi-sign-out" title="Cerrar sesión"
+                                     action="#{aSesion.cerrarSesion}" ajax="false"
+                                     styleClass="rounded-button ui-button-flat nav-salir"/>
+                </div>
             </f:facet>
         </p:menubar>
     </h:form>

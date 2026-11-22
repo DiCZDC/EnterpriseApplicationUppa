@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/plantillas/layout.xhtml">
+
+    <ui:define name="titulo">Crear cuenta | Úppa</ui:define>
+    <ui:define name="estilos"><h:outputStylesheet library="css" name="auth.css"/></ui:define>
+    <ui:define name="navbar"/>
+
+    <ui:define name="content">
+        <div class="auth">
+            <div class="welcome-bg"></div>
+
+            <div class="auth-card">
+                <h:link outcome="/index" styleClass="auth-logo">🍄</h:link>
+                <h1 class="auth-title">Crea una cuenta</h1>
+                <p class="auth-sub">Escribe tus datos para registrarte</p>
+
+                <h:form id="formRegistro" styleClass="auth-form">
+                    <p:messages id="mensajes" closable="true" styleClass="auth-msg"/>
+
+                    <label class="auth-label" for="formRegistro:nombre">Nombre</label>
+                    <p:inputText id="nombre" value="#{aSesion.regNombre}" required="true" maxlength="150"
+                                 requiredMessage="Escribe tu nombre." placeholder="Nombre completo"
+                                 styleClass="auth-input" autocomplete="name"/>
+
+                    <label class="auth-label" for="formRegistro:usuario">Nombre de usuario</label>
+                    <p:inputText id="usuario" value="#{aSesion.regNombreUsuario}" required="true" maxlength="100"
+                                 requiredMessage="Escribe un nombre de usuario." placeholder="micologo23"
+                                 styleClass="auth-input" autocomplete="username"/>
+
+                    <label class="auth-label" for="formRegistro:email">Correo electrónico</label>
+                    <p:inputText id="email" type="email" value="#{aSesion.regEmail}" required="true" maxlength="255"
+                                 requiredMessage="Escribe tu correo electrónico." placeholder="correo@ejemplo.com"
+                                 styleClass="auth-input" autocomplete="email"/>
+
+                    <label class="auth-label" for="formRegistro:contrasena">Contraseña</label>
+                    <p:password id="contrasena" value="#{aSesion.regContrasena}" required="true"
+                                requiredMessage="Escribe una contraseña." toggleMask="true" redisplay="false"
+                                feedback="false" styleClass="auth-input" autocomplete="new-password"/>
+                    <small class="auth-hint">Mínimo 8 caracteres, con letras y números.</small>
+
+                    <label class="auth-label" for="formRegistro:confirmacion">Confirmar contraseña</label>
+                    <p:password id="confirmacion" value="#{aSesion.regConfirmacion}" required="true"
+                                requiredMessage="Confirma tu contraseña." toggleMask="true" redisplay="false"
+                                feedback="false" styleClass="auth-input" autocomplete="new-password"/>
+
+                    <p:commandButton value="Crear cuenta" action="#{aSesion.registrar}"
+                                     ajax="false" styleClass="btn-gold auth-btn"/>
+                </h:form>
+
+                <p class="auth-alt">
+                    ¿Ya tienes una cuenta?
+                    <h:link outcome="/auth/login" value="Inicia sesión" styleClass="auth-link"/>
+                </p>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

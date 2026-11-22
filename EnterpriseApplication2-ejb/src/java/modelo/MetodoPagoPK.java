@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  *
- * @author daniel
+ * @author crstvbl
  */
 @Embeddable
 public class MetodoPagoPK implements Serializable {

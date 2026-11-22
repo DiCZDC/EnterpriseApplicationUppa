@@ -13,11 +13,12 @@
 
             <ui:define name="content">
                 <h:outputStylesheet library="css" name="dashboard.css"/>
+                <h:outputStylesheet library="css" name="reconocimiento.css"/>
 
                 <div class="dash">
 
                     <!-- Saludo -->
-                    <div class="dash-hello">¡Hola!, Usuario</div>
+                    <div class="dash-hello">¡Hola!, #{aSesion.nombre}</div>
                     <div class="dash-title-row">
                         <i class="pi pi-search"></i>
                         <h1 class="dash-title">¿Qué vamos<br/>a analizar hoy?</h1>
@@ -58,58 +59,25 @@
                         </div>
                     </section>
 
-                    <!-- Identificaciones recientes -->
+                    <!-- Identificaciones recientes (desde la tabla analisis) -->
                     <section class="sec">
                         <div class="sec-head">
                             <h2>Identificaciones recientes</h2>
-                            <p:link value="Ver todas" outcome="/vistas/reconocimiento/index" styleClass="link-olive"/>
+                            <p:link value="Ver todas" outcome="/vistas/reconocimiento/historial" styleClass="link-olive"/>
                         </div>
 
+                        <h:panelGroup layout="block" styleClass="vacio" rendered="#{empty aAnalisis.recientes}">
+                            <i class="pi pi-images"></i>
+                            <p>Aún no tienes identificaciones. ¡Analiza tu primer hongo!</p>
+                            <p:button value="Identificar ahora" icon="pi pi-search"
+                                      outcome="/vistas/reconocimiento/index" styleClass="btn-verde"/>
+                        </h:panelGroup>
+
                         <div class="recent">
-                            <ui:repeat var="m" value="#{[
-                                {'name':'Cantharellus cibarius','date':'13-04-2026','com':'Rebozuelo','status':'sano','image':'https://upload.wikimedia.org/wikipedia/commons/a/aa/2007-07-14_Cantharellus_cibarius.jpg'},
-                                {'name':'Boletus edulis','date':'22-04-2026','com':'Boleto','status':'sano','image':'https://upload.wikimedia.org/wikipedia/commons/b/b0/Boletus_edulis_EtgHollande_041031_091.jpg'},
-                                {'name':'Agaricus bisporus','date':'05-05-2026','com':'Champiñón blanco','status':'plaga','image':'https://extension.psu.edu/media/wysiwyg//extensions/catalog_product/9452fdf2a9104600895c1de77aa2f669/m/u/mushroom-infected-with-verticillium-dry-bubble-showing-split-stem-symptom.jpg'},
-                                {'name':'Morchella esculenta','date':'10-05-2026','com':'Colmenilla','status':'sano','image':'https://www.amanitacesarea.com/imagenes/morchella/esculenta1.jpg'}]}">
-
-                                <p:card styleClass="recent-card">
-                                    <f:facet name="header">
-                                        <div class="recent-img-wrap">
-                                            <img src="#{m.image}" alt="#{m.name}"/>
-                                            <span class="recent-status">
-                                                <p:tag value="Sano" styleClass="tag-sano"
-                                                       rendered="#{m.status eq 'sano'}"/>
-                                                <p:tag value="Plaga detectada" styleClass="tag-plaga"
-                                                       rendered="#{m.status ne 'sano'}"/>
-                                            </span>
-                                        </div>
-                                    </f:facet>
-
-                                    <div class="fields">
-                                        <div class="field">
-                                            <span class="field-label"><i class="pi pi-book"></i> Nombre común:</span>
-                                            <p:tag value="#{m.com}" styleClass="tag-amarillo"/>
-                                        </div>
-                                        <div class="field">
-                                            <span class="field-label"><i class="pi pi-bookmark"></i> Nombre científico:</span>
-                                            <p:tag value="#{m.name}" styleClass="tag-lima"/>
-                                        </div>
-
-                                        <h:panelGroup layout="block" styleClass="field" rendered="#{m.status ne 'sano'}">
-                                            <span class="field-label"><i class="pi pi-exclamation-triangle"></i> Nombre común de la enfermedad:</span>
-                                            <p:tag value="Burbuja Seca" styleClass="tag-rojo"/>
-                                        </h:panelGroup>
-                                        <h:panelGroup layout="block" styleClass="field" rendered="#{m.status ne 'sano'}">
-                                            <span class="field-label"><i class="pi pi-shield"></i> Nombre científico de la enfermedad:</span>
-                                            <p:tag value="Verticillium" styleClass="tag-rojo"/>
-                                        </h:panelGroup>
-
-                                        <div class="field">
-                                            <span class="field-label"><i class="pi pi-calendar"></i> Fecha de análisis:</span>
-                                            <p:tag value="#{m.date}" styleClass="tag-gris"/>
-                                        </div>
-                                    </div>
-                                </p:card>
+                            <ui:repeat var="m" value="#{aAnalisis.recientes}">
+                                <ui:include src="/plantillas/tarjeta-analisis.xhtml">
+                                    <ui:param name="a" value="#{m}"/>
+                                </ui:include>
                             </ui:repeat>
                         </div>
                     </section>

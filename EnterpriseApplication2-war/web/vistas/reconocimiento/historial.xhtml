@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- Historial completo de reconocimientos del usuario -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/plantillas/layout.xhtml">
+
+    <ui:param name="bodyClass" value="uppa-body uppa-light"/>
+    <ui:define name="titulo">Historial | Úppa</ui:define>
+    <ui:define name="estilos">
+        <h:outputStylesheet library="css" name="dashboard.css"/>
+        <h:outputStylesheet library="css" name="reconocimiento.css"/>
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="dash">
+            <div class="dash-hello">Historial</div>
+            <div class="dash-title-row">
+                <i class="pi pi-history"></i>
+                <h1 class="dash-title">Tus<br/>identificaciones</h1>
+            </div>
+
+            <section class="sec">
+                <div class="sec-head">
+                    <h2>#{aAnalisis.historial.size()} #{aAnalisis.historial.size() eq 1 ? 'reconocimiento' : 'reconocimientos'}</h2>
+                    <p:link value="Nuevo escaneo" outcome="/vistas/reconocimiento/index" styleClass="link-olive"/>
+                </div>
+
+                <h:panelGroup layout="block" styleClass="vacio" rendered="#{empty aAnalisis.historial}">
+                    <i class="pi pi-images"></i>
+                    <p>Aún no tienes identificaciones guardadas.</p>
+                    <p:button value="Identificar ahora" icon="pi pi-search"
+                              outcome="/vistas/reconocimiento/index" styleClass="btn-verde"/>
+                </h:panelGroup>
+
+                <div class="recent">
+                    <ui:repeat var="m" value="#{aAnalisis.historial}">
+                        <ui:include src="/plantillas/tarjeta-analisis.xhtml">
+                            <ui:param name="a" value="#{m}"/>
+                        </ui:include>
+                    </ui:repeat>
+                </div>
+            </section>
+        </div>
+    </ui:define>
+
+</ui:composition>

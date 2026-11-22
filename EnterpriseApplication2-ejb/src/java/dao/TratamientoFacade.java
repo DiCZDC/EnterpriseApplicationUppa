@@ -27,5 +27,11 @@ public class TratamientoFacade extends AbstractFacade<Tratamiento> {
     public TratamientoFacade() {
         super(Tratamiento.class);
     }
-    
+
+    /** Tratamientos de una enfermedad ordenados por su id (orden de los pasos). */
+    public java.util.List<Tratamiento> findByEnfermedad(int idEnfermedad) {
+        return em.createQuery("SELECT t FROM Tratamiento t WHERE t.tratamientoPK.idEnfermedad = :e "
+                + "ORDER BY t.tratamientoPK.idTratamiento", Tratamiento.class)
+                .setParameter("e", idEnfermedad).getResultList();
+    }
 }

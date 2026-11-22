@@ -27,5 +27,16 @@ public class EnfermedadFacade extends AbstractFacade<Enfermedad> {
     public EnfermedadFacade() {
         super(Enfermedad.class);
     }
-    
+
+    public Enfermedad findByNombreCientifico(String nombreCientifico) {
+        java.util.List<Enfermedad> r = em.createNamedQuery("Enfermedad.findByNombreCientifico", Enfermedad.class)
+                .setParameter("nombreCientifico", nombreCientifico).getResultList();
+        return r.isEmpty() ? null : r.get(0);
+    }
+
+    public Enfermedad findByNombreComun(String nombreComun) {
+        java.util.List<Enfermedad> r = em.createNamedQuery("Enfermedad.findByNombreComun", Enfermedad.class)
+                .setParameter("nombreComun", nombreComun).getResultList();
+        return r.isEmpty() ? null : r.get(0);
+    }
 }

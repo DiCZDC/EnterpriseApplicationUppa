@@ -1,23 +1,226 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
-    
-    <body>
-         <ui:composition template="/plantillas/layout.xhtml">
+<!--
+    Reconocimiento de hongos: port del componente Livewire file.upload de Laravel.
+    Estados: captura (archivo o cámara) → analizando → resultado.
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                template="/plantillas/layout.xhtml">
 
-            <ui:param name="bodyClass" value="uppa-body uppa-light"/>
-            <ui:define name="titulo">Reconocimiento</ui:define>
-            
-            <ui:define name="content">
-                        index del reconocimiento
+    <ui:param name="bodyClass" value="uppa-body uppa-light"/>
+    <ui:define name="titulo">Reconocimiento | Úppa</ui:define>
+    <ui:define name="estilos">
+        <h:outputStylesheet library="css" name="dashboard.css"/>
+        <h:outputStylesheet library="css" name="reconocimiento.css"/>
+    </ui:define>
 
-            </ui:define>
-         
-         </ui:composition>    
-        
-    </body>
-</html>
+    <ui:define name="content">
+        <c:set var="r" value="#{aReconocimiento.resultado}"/>
+
+        <div class="dash">
+            <div class="dash-hello">Reconocimiento</div>
+            <div class="dash-title-row">
+                <i class="pi pi-search"></i>
+                <h1 class="dash-title">Identifica<br/>tu hongo</h1>
+            </div>
+
+            <div class="rec">
+                <p:messages id="mensajes" closable="true" styleClass="rec-msg"/>
+
+                <!-- ═══════════ Estado: captura ═══════════ -->
+                <h:panelGroup layout="block" id="captura" styleClass="rec-captura" rendered="#{empty r}">
+
+                    <div class="visor" id="visor">
+                        <video id="camVideo" autoplay="autoplay" playsinline="playsinline" muted="muted" class="visor-video oculto"></video>
+                        <canvas id="camCanvas" class="oculto"></canvas>
+                        <img id="vistaPrevia" alt="Vista previa" class="visor-img oculto"/>
+
+                        <div class="reticula">
+                            <span class="esq tl"></span><span class="esq tr"></span>
+                            <span class="esq bl"></span><span class="esq br"></span>
+                        </div>
+
+                        <button type="button" id="btnGirar" class="visor-girar oculto" title="Cambiar cámara">
+                            <i class="pi pi-refresh"></i>
+                        </button>
+                        <button type="button" id="btnDisparo" class="visor-disparo oculto" title="Tomar foto">
+                            <span></span>
+                        </button>
+                    </div>
+
+                    <h:form id="formAnalisis" enctype="multipart/form-data" styleClass="rec-form">
+                        <div class="rec-controles">
+                            <button type="button" id="btnCamara" class="btn-camara">
+                                <i class="pi pi-camera"></i> Usar cámara
+                            </button>
+
+                            <div id="zonaArchivo">
+                                <h:inputFile id="foto" value="#{aReconocimiento.foto}" styleClass="rec-archivo"
+                                             a:accept="image/jpeg,image/png,image/webp"/>
+                            </div>
+
+                            <p id="ayudaCamara" class="rec-ayuda oculto">
+                                Encuadra el hongo y presiona el botón blanco para capturar
+                            </p>
+                        </div>
+
+                        <h:commandButton id="btnAnalizar" value="Analizar foto"
+                                         action="#{aReconocimiento.analizar}"
+                                         styleClass="btn-analizar"/>
+                    </h:form>
+                </h:panelGroup>
+
+                <!-- ═══════════ Estado: analizando (lo muestra reconocimiento.js al enviar) ═══════════ -->
+                <div id="analizando" class="rec-analizando oculto">
+                    <div class="rec-analizando-titulo">Identificando especie...</div>
+                    <div class="barra"><div id="barraProgreso" class="barra-relleno"></div></div>
+                    <div class="rec-analizando-desc">Procesando imagen y analizando características</div>
+                </div>
+
+                <!-- ═══════════ Estado: resultado ═══════════ -->
+                <h:panelGroup layout="block" rendered="#{not empty r}">
+                    <article class="res">
+                        <div class="res-hero">
+                            <h:panelGroup rendered="#{not empty aReconocimiento.urlFoto}">
+                                <img src="#{aReconocimiento.urlFoto}" alt="Foto analizada" class="res-hero-img"/>
+                            </h:panelGroup>
+
+                            <span class="res-estado">
+                                <p:tag value="Sano" styleClass="tag-sano" rendered="#{r.saludable}"/>
+                                <p:tag value="Plaga detectada" styleClass="tag-plaga" rendered="#{not r.saludable}"/>
+                            </span>
+
+                            <h:panelGroup styleClass="res-cultivo #{r.cultivada ? 'cultivable' : 'silvestre'}"
+                                          rendered="#{not empty r.cultivada}">
+                                <i class="pi #{r.cultivada ? 'pi-check' : 'pi-circle'}"></i>
+                                #{r.cultivada ? 'Cultivable' : 'Silvestre'}
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="res-titulo">
+                            <div class="res-etiqueta">#{r.detectado ? 'Hongo identificado' : 'No se detectó un hongo'}</div>
+                            <h:panelGroup rendered="#{not empty r.especie}">
+                                <h2 class="res-especie">#{r.especie}</h2>
+                            </h:panelGroup>
+                        </div>
+
+                        <!-- Seguridad del resultado -->
+                        <h:panelGroup layout="block" styleClass="res-bloque" rendered="#{not empty r.confianzaPct}">
+                            <div class="res-confianza">
+                                <span>Seguridad del resultado: <b class="#{r.claseNivel}">#{r.nivelSeguridad}</b></span>
+                                <span class="res-pct #{r.claseNivel}">
+                                    <h:outputText value="#{r.confianzaPct}"><f:convertNumber maxFractionDigits="0"/></h:outputText>%
+                                </span>
+                            </div>
+                            <div class="barra"><div class="barra-relleno" style="width: #{r.confianzaPct}%;"></div></div>
+                        </h:panelGroup>
+
+                        <!-- Información de la especie (tabla hongo) -->
+                        <h:panelGroup layout="block" styleClass="res-bloque"
+                                      rendered="#{not empty r.hongo or not empty r.mensajeEspecie}">
+                            <div class="res-subtitulo">Información</div>
+                            <h:panelGroup rendered="#{not empty r.mensajeEspecie}">
+                                <p class="res-mensaje">#{r.mensajeEspecie}</p>
+                            </h:panelGroup>
+
+                            <h:panelGroup layout="block" styleClass="fields" rendered="#{not empty r.hongo}">
+                                <div class="field">
+                                    <span class="field-label"><i class="pi pi-bookmark"></i> Nombre común:</span>
+                                    <p:tag value="#{r.hongo.nombreComun}" styleClass="tag-amarillo"/>
+                                </div>
+                                <div class="field">
+                                    <span class="field-label"><i class="pi pi-sitemap"></i> Familia:</span>
+                                    <p:tag value="#{r.hongo.familia}" styleClass="tag-lima"/>
+                                </div>
+                                <div class="field">
+                                    <span class="field-label"><i class="pi pi-globe"></i> Zonas:</span>
+                                    <p:tag value="#{r.hongo.region}" styleClass="tag-azul"/>
+                                </div>
+                                <h:panelGroup layout="block" styleClass="field" rendered="#{not empty r.hongo.informacion}">
+                                    <span class="field-label"><i class="pi pi-map"></i> Ambientes:</span>
+                                    <p:tag value="#{r.hongo.informacion.replace('Ambientes comunes: ', '')}" styleClass="tag-gris"/>
+                                </h:panelGroup>
+                                <div class="field">
+                                    <span class="field-label"><i class="pi pi-heart"></i> Estado de salud:</span>
+                                    <p:tag value="#{r.estadoLegible}" styleClass="#{r.saludable ? 'tag-sano' : 'tag-rojo'}"/>
+                                </div>
+                            </h:panelGroup>
+                        </h:panelGroup>
+
+                        <!-- Respuesta cruda si la API no devolvió nada interpretable -->
+                        <h:panelGroup layout="block" styleClass="res-bloque res-crudo"
+                                      rendered="#{empty r.especie and empty r.mensajeEspecie}">
+                            <div class="res-etiqueta">Respuesta del modelo</div>
+                            <pre>#{r.respuestaCruda}</pre>
+                        </h:panelGroup>
+
+                        <div class="res-acciones">
+                            <h:form id="formNuevo">
+                                <p:commandButton value="Nuevo escaneo" icon="pi pi-search-plus"
+                                                 action="#{aReconocimiento.nuevoEscaneo}" ajax="false"
+                                                 styleClass="btn-claro"/>
+                            </h:form>
+                            <p:button value="Ver detalle" icon="pi pi-external-link" outcome="/vistas/reconocimiento/show"
+                                      styleClass="btn-verde" rendered="#{not empty r.idAnalisis}">
+                                <f:param name="id" value="#{r.idAnalisis}"/>
+                            </p:button>
+                        </div>
+                        <h:panelGroup rendered="#{r.detectado and empty r.idAnalisis}">
+                            <p class="res-nota">Este resultado no se guardó en tu historial (la especie no está en el catálogo).</p>
+                        </h:panelGroup>
+                    </article>
+
+                    <!-- Atención requerida: tratamientos de la tabla tratamiento -->
+                    <h:panelGroup layout="block" styleClass="alerta" rendered="#{not r.saludable}">
+                        <div class="alerta-titulo"><i class="pi pi-exclamation-triangle"></i> Atención requerida</div>
+                        <p class="alerta-texto">
+                            #{empty r.mensajeSalud
+                              ? 'Hemos detectado posibles indicios de enfermedad o moho (como moho verde) en el hongo analizado. Sigue las recomendaciones a continuación.'
+                              : r.mensajeSalud}
+                        </p>
+                        <h:panelGroup rendered="#{not empty r.enfermedad}">
+                            <p class="alerta-enfermedad">
+                                <b>#{r.enfermedad.nombreComun}</b> (<i>#{r.enfermedad.nombreCientifico}</i>)
+                            </p>
+                        </h:panelGroup>
+
+                        <div class="tratamientos">
+                            <ui:repeat var="t" value="#{r.tratamientos}">
+                                <ui:include src="/plantillas/tratamiento.xhtml">
+                                    <ui:param name="t" value="#{t}"/>
+                                </ui:include>
+                            </ui:repeat>
+                        </div>
+                    </h:panelGroup>
+
+                    <!-- Consejos para una mejor foto -->
+                    <h:panelGroup layout="block" styleClass="consejos" rendered="#{r.fotoDeficiente}">
+                        <div class="consejos-titulo"><i class="pi pi-camera"></i> Toma una mejor foto</div>
+                        <p class="consejos-texto">Tu foto no es de alta calidad. ¡Aquí tienes algunos consejos para mejorar el reconocimiento!</p>
+                        <div class="consejo verde">
+                            <b><i class="pi pi-search-plus"></i> Captura los detalles clave</b>
+                            <p>Intenta incluir la parte superior del sombrero y, si es visible, las láminas o poros debajo del mismo.</p>
+                        </div>
+                        <div class="consejo ambar">
+                            <b><i class="pi pi-star"></i> Limpia tu lente</b>
+                            <p>Un lente limpio previene fotos borrosas e incrementa significativamente la precisión del reconocimiento.</p>
+                        </div>
+                        <div class="consejo rojo">
+                            <b><i class="pi pi-eye"></i> Enfoque</b>
+                            <p>Acércate para que el hongo ocupe la mayor parte de la imagen, asegurando un enfoque nítido.</p>
+                        </div>
+                    </h:panelGroup>
+                </h:panelGroup>
+            </div>
+        </div>
+
+        <h:outputScript library="js" name="reconocimiento.js" target="body"/>
+    </ui:define>
+
+</ui:composition>

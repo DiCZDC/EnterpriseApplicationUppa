@@ -1,24 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
-<context-param>
+<web-app version="4.0" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
+    <!-- Sin esto Payara decodifica los formularios como ISO-8859-1 (los acentos y la ñ se corrompen) -->
+    <request-character-encoding>UTF-8</request-character-encoding>
+    <context-param>
+        <!-- Cambiar a Production al desplegar fuera de desarrollo -->
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
+    </context-param>
+    <context-param>
+        <!-- f:convertDateTime usa la zona horaria del servidor en lugar de UTC -->
+        <param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
+        <param-value>true</param-value>
     </context-param>
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
+        <!-- Necesario para h:inputFile (subida de la foto a analizar, máx. 10 MB) -->
+        <multipart-config>
+            <max-file-size>10485760</max-file-size>
+            <max-request-size>11534336</max-request-size>
+            <file-size-threshold>1048576</file-size-threshold>
+        </multipart-config>
     </servlet>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>/faces/*</url-pattern>
     </servlet-mapping>
+    <!-- Evita que un .xhtml pedido sin /faces/ se entregue como código fuente -->
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>*.xhtml</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
         </session-timeout>
+        <cookie-config>
+            <http-only>true</http-only>
+        </cookie-config>
+        <tracking-mode>COOKIE</tracking-mode>
     </session-config>
     <welcome-file-list>
         <welcome-file>faces/index.xhtml</welcome-file>
     </welcome-file-list>
+    <!-- Sesión expirada al enviar un formulario → volver al login -->
+    <error-page>
+        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+        <location>/faces/auth/login.xhtml</location>
+    </error-page>
 </web-app>

@@ -1,11 +1,134 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
-    <h:head>
-        <title>Facelet Title</title>
-    </h:head>
-    <h:body>
-        el show
-    </h:body>
-</html>
+<!-- Detalle de un reconocimiento guardado: /vistas/reconocimiento/show.xhtml?id=N -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/plantillas/layout.xhtml">
+
+    <ui:param name="bodyClass" value="uppa-body uppa-light"/>
+    <ui:define name="titulo">Reconocimiento ##{aAnalisis.id} | Úppa</ui:define>
+    <ui:define name="estilos">
+        <h:outputStylesheet library="css" name="dashboard.css"/>
+        <h:outputStylesheet library="css" name="reconocimiento.css"/>
+    </ui:define>
+
+    <ui:define name="metadata">
+        <f:metadata>
+            <f:viewParam name="id" value="#{aAnalisis.id}"/>
+            <f:viewAction action="#{aAnalisis.cargar}"/>
+        </f:metadata>
+    </ui:define>
+
+    <ui:define name="content">
+
+        <ui:param name="a" value="#{aAnalisis.analisis}"/>
+
+        <div class="dash">
+            <h:link outcome="/vistas/reconocimiento/historial" styleClass="volver">
+                <i class="pi pi-arrow-left"></i> Volver al historial
+            </h:link>
+
+            <div class="res-etiqueta mt">Reconocimiento ##{aAnalisis.id}</div>
+            <h1 class="dash-title">Detalle del reconocimiento</h1>
+
+            <h:panelGroup layout="block" styleClass="vacio" rendered="#{empty a}">
+                <i class="pi pi-question-circle"></i>
+                <p>No encontramos este reconocimiento en tu historial.</p>
+            </h:panelGroup>
+
+            <h:panelGroup layout="block" rendered="#{not empty a}">
+                <article class="res">
+                    <div class="res-hero">
+                        <img src="#{aAnalisis.urlImagen(a)}" alt="#{a.hongo.nombreCientifico}" class="res-hero-img"/>
+                        <span class="res-estado">
+                            <p:tag value="Sano" styleClass="tag-sano" rendered="#{empty a.idEnfermedad}"/>
+                            <p:tag value="Plaga detectada" styleClass="tag-plaga" rendered="#{not empty a.idEnfermedad}"/>
+                        </span>
+                    </div>
+
+                    <div class="res-titulo">
+                        <div class="res-etiqueta">Hongo identificado</div>
+                        <h2 class="res-especie">#{a.hongo.nombreCientifico}</h2>
+                    </div>
+
+                    <h:panelGroup layout="block" styleClass="res-bloque" rendered="#{not empty a.precisionIdentificacion}">
+                        <div class="res-confianza">
+                            <span>Seguridad del resultado:
+                                <b class="nivel-#{aAnalisis.nivel(a.precisionIdentificacion).toLowerCase()}">#{aAnalisis.nivel(a.precisionIdentificacion)}</b>
+                            </span>
+                            <span class="res-pct nivel-#{aAnalisis.nivel(a.precisionIdentificacion).toLowerCase()}">
+                                <h:outputText value="#{a.precisionIdentificacion}"><f:convertNumber maxFractionDigits="0"/></h:outputText>%
+                            </span>
+                        </div>
+                        <div class="barra"><div class="barra-relleno" style="width: #{a.precisionIdentificacion}%;"></div></div>
+                    </h:panelGroup>
+
+                    <div class="res-bloque">
+                        <div class="res-subtitulo">Información</div>
+                        <div class="fields">
+                            <div class="field">
+                                <span class="field-label"><i class="pi pi-bookmark"></i> Nombre común:</span>
+                                <p:tag value="#{a.hongo.nombreComun}" styleClass="tag-amarillo"/>
+                            </div>
+                            <div class="field">
+                                <span class="field-label"><i class="pi pi-sitemap"></i> Familia:</span>
+                                <p:tag value="#{a.hongo.familia}" styleClass="tag-lima"/>
+                            </div>
+                            <div class="field">
+                                <span class="field-label"><i class="pi pi-globe"></i> Zonas:</span>
+                                <p:tag value="#{a.hongo.region}" styleClass="tag-azul"/>
+                            </div>
+                            <h:panelGroup layout="block" styleClass="field" rendered="#{not empty a.hongo.informacion}">
+                                <span class="field-label"><i class="pi pi-map"></i> Ambientes:</span>
+                                <p:tag value="#{a.hongo.informacion.replace('Ambientes comunes: ', '')}" styleClass="tag-gris"/>
+                            </h:panelGroup>
+                            <div class="field">
+                                <span class="field-label"><i class="pi pi-heart"></i> Estado de salud:</span>
+                                <p:tag value="#{empty a.idEnfermedad ? 'Sano' : a.idEnfermedad.nombreComun}"
+                                       styleClass="#{empty a.idEnfermedad ? 'tag-sano' : 'tag-rojo'}"/>
+                            </div>
+                            <div class="field">
+                                <span class="field-label"><i class="pi pi-calendar"></i> Fecha de análisis:</span>
+                                <span class="ui-tag ui-widget tag-gris"><span class="ui-tag-value">
+                                    <h:outputText value="#{a.fecha}"><f:convertDateTime pattern="dd-MM-yyyy HH:mm" type="date"/></h:outputText>
+                                </span></span>
+                            </div>
+                            <div class="field">
+                                <span class="field-label"><i class="pi pi-cog"></i> Modelo:</span>
+                                <p:tag value="#{a.versionModelo.nombre} — #{a.versionModelo.version}" styleClass="tag-gris"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="res-acciones">
+                        <p:button value="Nuevo escaneo" icon="pi pi-search-plus"
+                                  outcome="/vistas/reconocimiento/index" styleClass="btn-claro"/>
+                    </div>
+                </article>
+
+                <h:panelGroup layout="block" styleClass="alerta" rendered="#{not empty a.idEnfermedad}">
+                    <div class="alerta-titulo"><i class="pi pi-exclamation-triangle"></i> Atención requerida</div>
+                    <p class="alerta-enfermedad">
+                        <b>#{a.idEnfermedad.nombreComun}</b> (<i>#{a.idEnfermedad.nombreCientifico}</i>)
+                        <h:outputText value=" — confianza del diagnóstico: #{a.precisionDiagnostico}%"
+                                      rendered="#{not empty a.precisionDiagnostico}"/>
+                    </p>
+                    <h:panelGroup rendered="#{not empty a.idEnfermedad.informacion}">
+                        <p class="alerta-texto">#{a.idEnfermedad.informacion}</p>
+                    </h:panelGroup>
+                    <div class="tratamientos">
+                        <ui:repeat var="t" value="#{aEnfermedad.tratamientos(a.idEnfermedad)}">
+                            <ui:include src="/plantillas/tratamiento.xhtml">
+                                <ui:param name="t" value="#{t}"/>
+                            </ui:include>
+                        </ui:repeat>
+                    </div>
+                </h:panelGroup>
+            </h:panelGroup>
+        </div>
+    </ui:define>
+
+</ui:composition>

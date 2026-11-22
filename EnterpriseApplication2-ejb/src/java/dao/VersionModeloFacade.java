@@ -27,5 +27,10 @@ public class VersionModeloFacade extends AbstractFacade<VersionModelo> {
     public VersionModeloFacade() {
         super(VersionModelo.class);
     }
-    
+
+    public VersionModelo findByNombre(String nombre) {
+        java.util.List<VersionModelo> r = em.createNamedQuery("VersionModelo.findByNombre", VersionModelo.class)
+                .setParameter("nombre", nombre).getResultList();
+        return r.isEmpty() ? null : r.get(0);
+    }
 }

@@ -53,3 +53,13 @@ Thumbs.db
 *.swp
 *.bak
 *.tmp
+# ==========================================
+# Úppa: dependencias versionadas a propósito
+# ==========================================
+# PrimeFaces se distribuye con el proyecto para que compile en otro equipo sin rutas absolutas
+!EnterpriseApplication2-war/lib/*.jar
+
+# Servicio Python
+uppa-api/.venv/
+uppa-api/__pycache__/
+uppa-api/**/__pycache__/

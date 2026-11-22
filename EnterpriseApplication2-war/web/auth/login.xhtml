@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/plantillas/layout.xhtml">
+
+    <ui:define name="titulo">Iniciar sesión | Úppa</ui:define>
+    <ui:define name="estilos"><h:outputStylesheet library="css" name="auth.css"/></ui:define>
+    <ui:define name="navbar"/>
+
+    <ui:define name="content">
+        <div class="auth">
+            <div class="welcome-bg"></div>
+
+            <div class="auth-card">
+                <h:link outcome="/index" styleClass="auth-logo">🍄</h:link>
+                <h1 class="auth-title">Inicia sesión</h1>
+                <p class="auth-sub">Escribe tu correo o usuario y tu contraseña</p>
+
+                <h:form id="formLogin" styleClass="auth-form">
+                    <p:messages id="mensajes" closable="true" styleClass="auth-msg"/>
+
+                    <label class="auth-label" for="formLogin:identificador">Correo o usuario</label>
+                    <p:inputText id="identificador" value="#{aSesion.identificador}" required="true"
+                                 requiredMessage="Escribe tu correo o usuario."
+                                 placeholder="correo@ejemplo.com" styleClass="auth-input"
+                                 autocomplete="username"/>
+
+                    <label class="auth-label" for="formLogin:contrasena">Contraseña</label>
+                    <p:password id="contrasena" value="#{aSesion.contrasena}" required="true"
+                                requiredMessage="Escribe tu contraseña."
+                                toggleMask="true" redisplay="false" feedback="false"
+                                styleClass="auth-input" autocomplete="current-password"/>
+
+                    <p:commandButton value="Iniciar sesión" action="#{aSesion.iniciarSesion}"
+                                     ajax="false" styleClass="btn-gold auth-btn"/>
+                </h:form>
+
+                <p class="auth-alt">
+                    ¿No tienes una cuenta?
+                    <h:link outcome="/auth/registro" value="Regístrate" styleClass="auth-link"/>
+                </p>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

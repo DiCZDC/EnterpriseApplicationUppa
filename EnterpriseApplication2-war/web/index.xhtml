@@ -33,13 +33,20 @@
                     </div>
 
                     <div class="cta">
-                        <p:button value="Crear cuenta" 
-                                   
-                                  styleClass="btn-gold"/>
-                        
-                        <p:button value="Inicio" 
+                        <p:button value="Crear cuenta"
+                                  outcome="/auth/registro"
+                                  styleClass="btn-gold"
+                                  rendered="#{not aSesion.autenticado}"/>
+
+                        <p:button value="Iniciar sesión"
+                                  outcome="/auth/login"
+                                  styleClass="btn-outline"
+                                  rendered="#{not aSesion.autenticado}"/>
+
+                        <p:button value="Ir al inicio"
                                   outcome="/vistas/dashboard"
-                                  styleClass="btn-outline"/>
+                                  styleClass="btn-gold"
+                                  rendered="#{aSesion.autenticado}"/>
                         <p class="cta-note">
                             Al continuar aceptas los Términos y la Política de privacidad
                         </p>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE resources PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions//EN" "http://glassfish.org/dtds/glassfish-resources_1_5.dtd">
+<!--
+    NetBeans registra estos recursos en Payara automáticamente al desplegar.
+    Ajusta serverName / portNumber / user / password a tu instalación de PostgreSQL.
+    Requiere el driver JDBC de PostgreSQL en <payara>/glassfish/domains/domain1/lib/
+-->
+<resources>
+    <jdbc-connection-pool name="uppaPool"
+                          res-type="javax.sql.DataSource"
+                          datasource-classname="org.postgresql.ds.PGSimpleDataSource"
+                          is-connection-validation-required="true"
+                          connection-validation-method="auto-commit"
+                          steady-pool-size="2"
+                          max-pool-size="16">
+        <property name="serverName" value="localhost"/>
+        <property name="portNumber" value="5432"/>
+        <property name="databaseName" value="uppa"/>
+        <property name="user" value="postgres"/>
+        <property name="password" value="postgres"/>
+    </jdbc-connection-pool>
+    <jdbc-resource enabled="true" jndi-name="jdbc/uppa" object-type="user" pool-name="uppaPool"/>
+</resources>

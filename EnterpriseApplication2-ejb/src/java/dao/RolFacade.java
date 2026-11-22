@@ -27,5 +27,10 @@ public class RolFacade extends AbstractFacade<Rol> {
     public RolFacade() {
         super(Rol.class);
     }
-    
+
+    public Rol findByNombre(String nombre) {
+        java.util.List<Rol> r = em.createNamedQuery("Rol.findByNombre", Rol.class)
+                .setParameter("nombre", nombre).getResultList();
+        return r.isEmpty() ? null : r.get(0);
+    }
 }

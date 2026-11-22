@@ -33,6 +33,11 @@ public abstract class AbstractFacade<T> {
         getEntityManager().remove(getEntityManager().merge(entity));
     }
 
+    /** Sincroniza el contexto con la BD (necesario para obtener IDs IDENTITY antes del commit). */
+    public void flush() {
+        getEntityManager().flush();
+    }
+
     public T find(Object id) {
         return getEntityManager().find(entityClass, id);
     }
